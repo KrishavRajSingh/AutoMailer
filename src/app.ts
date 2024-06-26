@@ -18,5 +18,5 @@ app.get('/email', async (req, res) => {
 // emailQueue.add('fetchEmails', {}, {repeat: {every: 60000}});
 
 app.listen(3000, () => {
-    console.log('sun rha hun mai');
+    console.log('started listening, go to http://localhost:3000/auth/google');
 })
