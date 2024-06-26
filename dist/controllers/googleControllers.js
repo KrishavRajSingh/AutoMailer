@@ -30,7 +30,7 @@ exports.googleAuthRouter.get('/callback', (req, res) => __awaiter(void 0, void 0
     try {
         const tokens = yield (0, googleService_1.getGoogleTokens)(code);
         // Optionally, save tokens to database or session
-        res.send('Authorization successful! You can now use this account.');
+        res.redirect('/email');
     }
     catch (err) {
         console.error('Error exchanging code for tokens:', err);

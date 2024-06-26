@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const googleControllers_1 = __importDefault(require("./controllers/googleControllers"));
 const googleService_1 = require("./services/googleService");
-// import { processEmailQueue } from './queues/emailQueue';
+const emailQueue_1 = require("./queues/emailQueue");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use('/auth/google', googleControllers_1.default);
@@ -24,13 +24,13 @@ app.get('/', (req, res) => {
 });
 app.get('/email', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const emails = yield (0, googleService_1.fetchEmails)();
-    emails.forEach((email) => __awaiter(void 0, void 0, void 0, function* () {
-        if (email.id)
-            console.log(yield (0, googleService_1.getEmailContent)(email.id));
-    }));
-    res.send(emails);
+    // emails.forEach(async(email)=>{
+    //     if(email.id)
+    //     console.log(await getEmailContent(email.id))})
+    (0, emailQueue_1.processQueue)();
+    res.send('Authorization successful! You can now use this account.' + emails);
 }));
-// processEmailQueue();
+// emailQueue.add('fetchEmails', {}, {repeat: {every: 60000}});
 app.listen(3000, () => {
     console.log('sun rha hun mai');
 });

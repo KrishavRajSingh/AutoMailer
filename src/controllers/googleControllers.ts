@@ -20,7 +20,7 @@ googleAuthRouter.get('/callback', async (req, res) => {
   try {
     const tokens = await getGoogleTokens(code);
     // Optionally, save tokens to database or session
-    res.send('Authorization successful! You can now use this account.');
+    res.redirect('/email');
   } catch (err) {
     console.error('Error exchanging code for tokens:', err);
     res.status(500).send('Failed to obtain tokens');

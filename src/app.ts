@@ -1,7 +1,7 @@
 import express from 'express';
 import googleAuthRouter from './controllers/googleControllers';
 import { fetchEmails, getEmailContent } from './services/googleService';
-// import { processEmailQueue } from './queues/emailQueue';
+import { emailQueue, processQueue } from './queues/emailQueue';
 
 const app = express();
 app.use(express.json());
@@ -13,12 +13,13 @@ app.get('/', (req, res) => {
 });
 app.get('/email', async (req, res) => {
     const emails = await fetchEmails();
-    emails.forEach(async(email)=>{
-        if(email.id)
-        console.log(await getEmailContent(email.id))})
-    res.send(emails);
+    // emails.forEach(async(email)=>{
+    //     if(email.id)
+    //     console.log(await getEmailContent(email.id))})
+    processQueue();
+    res.send('Authorization successful! You can now use this account.' + emails);
 })
-// processEmailQueue();
+// emailQueue.add('fetchEmails', {}, {repeat: {every: 60000}});
 
 app.listen(3000, () => {
     console.log('sun rha hun mai');
