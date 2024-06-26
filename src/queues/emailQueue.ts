@@ -1,6 +1,6 @@
 import { Queue, Worker } from 'bullmq';
 import { fetchEmails, getEmailContent, sendEmail } from "../services/googleService";
-import { analyseEmailContent, generateReply } from '../services/geminiService';
+import { analyseEmailContent } from '../services/geminiService';
 
 
 const connection = {
@@ -8,14 +8,6 @@ const connection = {
   port: 6379
 }
 export const emailQueue = new Queue('emailQueue', {connection});
-emailQueue.drain();
-emailQueue.add('fetchEmails', {}, {repeat: {every: 60000}});
-// emailQueue.process('fetchEmails', async (job) => {
-//     const emails = await fetchEmails();
-//     for (const email of emails) {
-//         emailQueue.add('processEmail', { messageId: email.id });
-//     }
-// })
 
 
 

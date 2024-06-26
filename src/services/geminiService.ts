@@ -20,13 +20,6 @@ customizable templates and A/B testing to real-time analytics and performance tr
 
 export async function analyseEmailContent(emailContent: {subject: string, from: string, body: string}): Promise<{label: string, response: string}> {
     try {
-        // const result = await model.generateContent(`
-        //     ${context} Whether they are interested on our product or not,
-        //     analyze the following email content and label it as Interested, Not Interested, or More Information\n\n${emailContent}`
-        // );
-        // const response = await result.response;
-        // console.log(emailContent, 'gem', response.text());
-        // console.log('hdihd', emailContent);
         
         const result = await model.generateContent(`
             ${context}    
@@ -42,16 +35,17 @@ export async function analyseEmailContent(emailContent: {subject: string, from: 
             subject: ${emailContent.subject}
             body: ${emailContent.body}
             from: ${emailContent.from}
-            You must send response in this json format {label, response}
+            You must send response in this json format {label, response} and don't use new line in response
         `)
-        const responseText =await result.response.text();
+        const responseText = await result.response.text();
         const jsonResponseMatch = responseText.match(/\{.*\}/s);
         if (!jsonResponseMatch) {
             throw new Error('Invalid JSON response');
         }
 
         const jsonResponse = jsonResponseMatch[0];
-        console.log('response', jsonResponse);
+        console.log(jsonResponse);
+        
         const parsedResponse = JSON.parse(jsonResponse);
         
         const { label, response } = parsedResponse;
@@ -62,31 +56,3 @@ export async function analyseEmailContent(emailContent: {subject: string, from: 
       throw error;
     }
 }
-
-export const generateReply = async (label: string, emailContent: string): Promise<string> => {
-    try{
-        let prompt = '';
-        switch (label) {
-            case 'Interested':
-            prompt = 'Generate a response asking if they are willing to hop on to a demo call by suggesting a time.';
-            break;
-            case 'Not Interested':
-            prompt = 'Generate a polite response acknowledging their lack of interest.';
-            break;
-            case 'More Information':
-            prompt = 'Generate a response asking what additional information they need.';
-            break;
-            default:
-            prompt = 'Generate a generic response.';
-        }
-        
-        const result = await model.generateContent(`
-            Reading the email: ${emailContent} \n\n${prompt}`
-        );
-        const response = await result.response;
-        return response.text();
-    }catch(err){
-        console.error(err);
-        throw err;
-    }
-};
