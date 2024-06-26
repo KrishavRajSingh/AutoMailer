@@ -30,6 +30,11 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
 GEMINI_API_KEY=your-gemini-api-key
 ```
+Start redis server on port 6379
+```
+docker run -itd -p 6379:6379 redis
+```
+
 Start the server and go to http://localhost:3000/auth/google
 ```
 npm run start
