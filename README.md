@@ -11,7 +11,7 @@ AutoEmail is an Express.js application designed to automate email handling using
 # Installation
 Clone the repo
 ```
-https://github.com/KrishavRajSingh/AutoMailer.git
+git clone https://github.com/KrishavRajSingh/AutoMailer.git
 ```
 Install dependencies
 ```
