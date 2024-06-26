@@ -1,2 +1,36 @@
 # AutoMailer
-AutoMailer is a powerful and efficient tool designed to automate the process of sending emails. It streamlines email communication by allowing users to schedule, compose, and send emails in bulk, making it an ideal solution for businesses and individuals who need to manage large volumes of email communication with minimal effort.
+AutoEmail is an Express.js application designed to automate email handling using OAuth authentication for Google and Microsoft Outlook. This application allows users to authenticate via Google, read unread emails, analyze email content using gemini, and send automated responses based on the content of the emails.
+
+#Features
+- OAuth authentication with Google and Microsoft Outlook.
+- Fetch unread emails.
+- Analyze email content, categorize it and generate respponse using gemini.
+- Send automated email responses based on the email content.
+- Mark emails as read after responding.
+
+# Installation
+Clone the repo
+```
+https://github.com/KrishavRajSingh/AutoMailer.git
+```
+Install dependencies
+```
+cd AutoMailer
+npm i
+```
+Copy the contents from .env.example and paste in .env file in the root directory 
+```
+cp .env.example .env
+```
+
+Add your Google credentials:
+```
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+GEMINI_API_KEY=your-gemini-api-key
+```
+Start the server and go to http://localhost:3000/auth/google
+```
+npm run start
+```
