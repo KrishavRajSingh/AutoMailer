@@ -41,12 +41,13 @@ function analyseEmailContent(emailContent) {
             const result = yield model.generateContent(`
             ${context}    
             Categorizing the email based on the content and assign a label as follows -
-                Interested- if the email shows interest in our product,
+                Interested- if the email shows interest or is related to our product,
                 Not Interested- if the email does not show interest in our product,
                 More information
             and suggest an appropriate response based on the content of the email. For example -
             a. If the email mentions they are interested to know more, your reply should ask them if they
             are willing to hop on to a demo call by suggesting a time.
+            
             This mails are to be directly send to our clients, so make sure there are no variables. You can use ReachInbox Team as sender.
             subject: ${emailContent.subject}
             body: ${emailContent.body}
@@ -59,7 +60,7 @@ function analyseEmailContent(emailContent) {
                 throw new Error('Invalid JSON response');
             }
             const jsonResponse = jsonResponseMatch[0];
-            console.log('response', responseText);
+            console.log('response', jsonResponse);
             const parsedResponse = JSON.parse(jsonResponse);
             const { label, response } = parsedResponse;
             return { label, response };

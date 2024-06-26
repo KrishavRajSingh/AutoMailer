@@ -12,12 +12,9 @@ app.get('/', (req, res) => {
     res.send('Email Automation Tool API');
 });
 app.get('/email', async (req, res) => {
-    const emails = await fetchEmails();
-    // emails.forEach(async(email)=>{
-    //     if(email.id)
-    //     console.log(await getEmailContent(email.id))})
+    
     processQueue();
-    res.send('Authorization successful! You can now use this account.' + emails);
+    res.send(`Auth successful! You can now use this account.`);
 })
 // emailQueue.add('fetchEmails', {}, {repeat: {every: 60000}});
 

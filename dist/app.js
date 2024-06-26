@@ -27,8 +27,9 @@ app.get('/email', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // emails.forEach(async(email)=>{
     //     if(email.id)
     //     console.log(await getEmailContent(email.id))})
+    console.log(emails);
     (0, emailQueue_1.processQueue)();
-    res.send('Authorization successful! You can now use this account.' + emails);
+    res.send(`Auth successful! You can now use this account. ${emails}`);
 }));
 // emailQueue.add('fetchEmails', {}, {repeat: {every: 60000}});
 app.listen(3000, () => {

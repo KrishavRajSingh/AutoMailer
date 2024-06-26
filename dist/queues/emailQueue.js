@@ -34,13 +34,13 @@ const processQueue = () => {
             if (emails) {
                 for (const email of emails) {
                     if (email.id) {
-                        exports.emailQueue.add('processEmail', { messageId: email.id });
+                        exports.emailQueue.add('processEmail', { messageId: email.id, threadId: email.threadId });
                     }
                 }
             }
         }
         else if (job.name === 'processEmail') {
-            const { messageId } = job.data;
+            const { messageId, threadId } = job.data;
             const emailContent = yield (0, googleService_1.getEmailContent)(messageId);
             // console.log(emailContent);
             const { label, response } = yield (0, geminiService_1.analyseEmailContent)(emailContent);
@@ -49,7 +49,9 @@ const processQueue = () => {
                 yield (0, googleService_1.sendEmail)({
                     to: emailContent.from,
                     subject: `Re: ${emailContent.subject}`,
-                    body: response
+                    body: response,
+                    messageId,
+                    threadId
                 });
             }
         }

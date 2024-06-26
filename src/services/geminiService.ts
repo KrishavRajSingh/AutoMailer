@@ -31,12 +31,13 @@ export async function analyseEmailContent(emailContent: {subject: string, from: 
         const result = await model.generateContent(`
             ${context}    
             Categorizing the email based on the content and assign a label as follows -
-                Interested- if the email shows interest in our product,
+                Interested- if the email shows interest or is related to our product,
                 Not Interested- if the email does not show interest in our product,
                 More information
             and suggest an appropriate response based on the content of the email. For example -
             a. If the email mentions they are interested to know more, your reply should ask them if they
             are willing to hop on to a demo call by suggesting a time.
+            
             This mails are to be directly send to our clients, so make sure there are no variables. You can use ReachInbox Team as sender.
             subject: ${emailContent.subject}
             body: ${emailContent.body}
@@ -83,7 +84,6 @@ export const generateReply = async (label: string, emailContent: string): Promis
             Reading the email: ${emailContent} \n\n${prompt}`
         );
         const response = await result.response;
-        console.log(emailContent, 'gem', response.text());
         return response.text();
     }catch(err){
         console.error(err);

@@ -24,10 +24,15 @@ const credentials = {
     redirect_uri: process.env.GOOGLE_REDIRECT_URI,
 };
 const oAuth2Client = new google_auth_library_1.OAuth2Client(credentials.client_id, credentials.client_secret, credentials.redirect_uri);
+const gmail = googleapis_1.google.gmail({ version: 'v1', auth: oAuth2Client });
 const getGoogleAuthUrl = () => {
     return oAuth2Client.generateAuthUrl({
         access_type: 'offline',
-        scope: ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
+        scope: [
+            'https://www.googleapis.com/auth/gmail.readonly',
+            'https://www.googleapis.com/auth/gmail.send',
+            'https://www.googleapis.com/auth/gmail.modify'
+        ]
     });
 };
 exports.getGoogleAuthUrl = getGoogleAuthUrl;
@@ -38,13 +43,12 @@ const getGoogleTokens = (code) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.getGoogleTokens = getGoogleTokens;
 const fetchEmails = () => __awaiter(void 0, void 0, void 0, function* () {
-    const gmail = googleapis_1.google.gmail({ version: 'v1', auth: oAuth2Client });
     const res = yield gmail.users.messages.list({ userId: 'me', q: 'is:unread', maxResults: 5 });
     return res.data.messages || [];
 });
 exports.fetchEmails = fetchEmails;
 const getEmailContent = (messageId) => __awaiter(void 0, void 0, void 0, function* () {
-    const gmail = googleapis_1.google.gmail({ version: 'v1', auth: oAuth2Client });
+    // const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });
     const res = yield gmail.users.messages.get({ userId: 'me', id: messageId });
     // const snippet = res.data.snippet || '';
     const payload = res.data.payload || {};
@@ -85,13 +89,24 @@ function getBody(payload) {
     }
     return body;
 }
-function parseSenderName(fromHeader) {
-    // Extract sender's name from the "From" header
-    const match = fromHeader.match(/"([^"]+)"/);
-    return match ? match[1] : fromHeader.split('<')[0].trim(); // Extracted name without surrounding quotes or use the email itself
-}
-const sendEmail = ({ to, subject, body }) => __awaiter(void 0, void 0, void 0, function* () {
-    const gmail = googleapis_1.google.gmail({ version: 'v1', auth: oAuth2Client });
+const markEmailAsRead = (messageId) => __awaiter(void 0, void 0, void 0, function* () {
+    // const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });
+    try {
+        yield gmail.users.messages.modify({
+            userId: 'me',
+            id: messageId,
+            requestBody: {
+                removeLabelIds: ['UNREAD'],
+            },
+        });
+        console.log(`Email ${messageId} marked as read`);
+    }
+    catch (error) {
+        console.error('Error marking email as read:', error);
+    }
+});
+const sendEmail = ({ to, subject, body, messageId, threadId }) => __awaiter(void 0, void 0, void 0, function* () {
+    // const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });
     if (!to) {
         console.error('Recipient address is required');
         return;
@@ -99,6 +114,8 @@ const sendEmail = ({ to, subject, body }) => __awaiter(void 0, void 0, void 0, f
     const raw = [
         `To: ${to}`,
         `Subject: ${subject}`,
+        `In-Reply-To: ${messageId}`,
+        `References: ${messageId}`,
         '',
         `${body}`
     ].join('\n');
@@ -109,8 +126,10 @@ const sendEmail = ({ to, subject, body }) => __awaiter(void 0, void 0, void 0, f
             userId: 'me',
             requestBody: {
                 raw: encodedMessage,
+                threadId
             }
         });
+        markEmailAsRead(messageId);
         console.log('Email sent successfully');
     }
     catch (error) {
