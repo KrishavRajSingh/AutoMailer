@@ -1,7 +1,6 @@
 import express from 'express';
 import googleAuthRouter from './controllers/googleControllers';
-import { fetchEmails, getEmailContent } from './services/googleService';
-import { emailQueue, processQueue } from './queues/emailQueue';
+import { processQueue } from './queues/emailQueue';
 
 const app = express();
 app.use(express.json());
