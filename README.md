@@ -2,12 +2,13 @@
 AutoEmail is an Express.js application designed to automate email handling using OAuth authentication for Google and Microsoft Outlook. This application allows users to authenticate via Google, read unread emails, analyze email content using Gemini, and send automated responses based on the content of the emails.
 
 # Features
-- OAuth authentication with Google and Microsoft Outlook.
+- OAuth authentication with Google.
 - Fetch unread emails.
 - Analyze email content, categorize it and generate responses using Gemini.
 - Send automated email responses based on the email content.
 - Mark emails as read after responding.
-
+- Job queue management using BullMQ.
+  
 # Installation
 Clone the repo
 ```
@@ -33,3 +34,9 @@ Start the server and go to http://localhost:3000/auth/google
 ```
 npm run start
 ```
+
+# Dependencies
+- Express.js
+- BullMQ
+- Redis
+- Gemini API
