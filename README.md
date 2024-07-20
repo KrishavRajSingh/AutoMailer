@@ -1,6 +1,12 @@
 # AutoMailer
 AutoEmail is an Express.js application designed to automate email handling using OAuth authentication for Google and Microsoft Outlook. This application allows users to authenticate via Google, read unread emails, analyze email content using Gemini, and send automated responses based on the content of the emails.
 
+
+
+https://github.com/user-attachments/assets/8dbb3cfa-e43c-45f3-8282-27cb0c095b7a
+
+
+
 # Features
 - OAuth authentication with Google.
 - Fetch unread emails.
